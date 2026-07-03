@@ -4,8 +4,8 @@ A Home Assistant custom integration that tracks vessels in real-time using the [
 
 Each tracked vessel appears as a `device_tracker` entity on your Home Assistant map, with position, speed, heading, and voyage data updated live as AIS messages are received.
 
-[![HACS Action](https://github.com/sh00t2kill/ha-aisstream/actions/workflows/action.yml/badge.svg)](https://github.com/sh00t2kill/ha-aisstream/actions/workflows/action.yml)
-[![Validate with hassfest](https://github.com/sh00t2kill/ha-aisstream/actions/workflows/hassfest.yml/badge.svg)](https://github.com/sh00t2kill/ha-aisstream/actions/workflows/hassfest.yml)
+[![HACS Action](https://github.com/redawg/ha-aisstream/actions/workflows/action.yml/badge.svg)](https://github.com/redawg/ha-aisstream/actions/workflows/action.yml)
+[![Validate with hassfest](https://github.com/redawg/ha-aisstream/actions/workflows/hassfest.yml/badge.svg)](https://github.com/redawg/ha-aisstream/actions/workflows/hassfest.yml)
 
 ---
 
@@ -48,7 +48,7 @@ Each tracked vessel appears as a `device_tracker` entity on your Home Assistant 
 
 1. Open HACS in Home Assistant
 2. Go to **Integrations** → **⋮** → **Custom repositories**
-3. Add `https://github.com/sh00t2kill/ha-aisstream` with category **Integration**
+3. Add `https://github.com/redawg/ha-aisstream` with category **Integration**
 4. Search for **AISstream** and install it
 5. Restart Home Assistant
 

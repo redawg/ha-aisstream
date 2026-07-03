@@ -3,9 +3,9 @@
   "name": "AISstream Vessel Tracker",
   "codeowners": [],
   "config_flow": true,
-  "documentation": "https://github.com/sh00t2kill/ha-aisstream",
+  "documentation": "https://github.com/redawg/ha-aisstream",
   "iot_class": "cloud_push",
-  "issue_tracker": "https://github.com/sh00t2kill/ha-aisstream/issues",
+  "issue_tracker": "https://github.com/redawg/ha-aisstream/issues",
   "requirements": ["websockets>=10.0"],
   "version": "1.1.1"
 }

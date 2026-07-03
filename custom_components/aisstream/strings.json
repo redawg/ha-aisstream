@@ -6,12 +6,14 @@
         "description": "Enter your AISstream API key and the MMSI numbers of the vessels you want to track.",
         "data": {
           "api_key": "API Key",
-          "mmsi_list": "MMSI Numbers (comma-separated)"
+          "mmsi_list": "MMSI Numbers (comma-separated, optional in area mode)",
+          "track_area": "Track all vessels in Puget Sound"
         }
       }
     },
     "error": {
-      "invalid_mmsi": "Enter at least one valid numeric MMSI."
+      "invalid_mmsi": "Enter at least one valid numeric MMSI.",
+      "missing_targets": "Enable area tracking or provide at least one MMSI."
     },
     "abort": {
       "already_configured": "AISstream is already configured."

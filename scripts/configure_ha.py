@@ -69,8 +69,9 @@ def main() -> int:
     payload = {
         "api_key": api_key,
         "mmsi_list": os.environ.get("AISSTREAM_MMSI", WSF_MMSIS),
-        "track_area": True,
     }
+    if os.environ.get("AISSTREAM_TRACK_AREA", "1") == "1":
+        payload["track_area"] = True
     status, result = req(
         "POST",
         f"/api/config/config_entries/flow/{flow['flow_id']}",

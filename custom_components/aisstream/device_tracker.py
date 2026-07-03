@@ -6,6 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import CONF_TRACK_AREA, DOMAIN
 from .coordinator import AISstreamCoordinator
+from .map_sync import MapDashboardSync
 
 
 async def async_setup_entry(
@@ -15,15 +16,20 @@ async def async_setup_entry(
 ) -> None:
     coordinator: AISstreamCoordinator = hass.data[DOMAIN][entry.entry_id]
     trackers: dict[str, AISVesselTracker] = {}
+    track_area = entry.data.get(CONF_TRACK_AREA, False)
+    map_sync = hass.data[DOMAIN].get("map_sync")
+    if track_area and map_sync is None:
+        map_sync = MapDashboardSync(hass)
+        hass.data[DOMAIN]["map_sync"] = map_sync
 
     def add_tracker(mmsi: str) -> None:
         if mmsi in trackers:
             return
-        tracker = AISVesselTracker(coordinator, mmsi)
+        tracker = AISVesselTracker(coordinator, mmsi, track_area=track_area, map_sync=map_sync)
         trackers[mmsi] = tracker
         async_add_entities([tracker])
 
-    if entry.data.get(CONF_TRACK_AREA):
+    if track_area:
         coordinator.set_vessel_discovered_callback(add_tracker)
     else:
         for mmsi in coordinator.mmsi_list:
@@ -36,9 +42,18 @@ class AISVesselTracker(TrackerEntity):
     _attr_should_poll = False
     _attr_source_type = SourceType.GPS
 
-    def __init__(self, coordinator: AISstreamCoordinator, mmsi: str) -> None:
+    def __init__(
+        self,
+        coordinator: AISstreamCoordinator,
+        mmsi: str,
+        *,
+        track_area: bool = False,
+        map_sync: MapDashboardSync | None = None,
+    ) -> None:
         self._coordinator = coordinator
         self._mmsi = mmsi
+        self._track_area = track_area
+        self._map_sync = map_sync
         self._attr_unique_id = f"aisstream_{mmsi}"
         self._remove_listener = None
 
@@ -80,6 +95,8 @@ class AISVesselTracker(TrackerEntity):
         self._remove_listener = self._coordinator.async_add_listener(
             self._mmsi, self.async_write_ha_state
         )
+        if self._track_area and self._map_sync is not None:
+            await self._map_sync.async_queue(self.entity_id, self.name)
 
     async def async_will_remove_from_hass(self) -> None:
         if self._remove_listener:

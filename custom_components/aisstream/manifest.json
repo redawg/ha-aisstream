@@ -7,5 +7,5 @@
   "iot_class": "cloud_push",
   "issue_tracker": "https://github.com/sh00t2kill/ha-aisstream/issues",
   "requirements": ["websockets>=10.0"],
-  "version": "1.1.0"
+  "version": "1.1.1"
 }

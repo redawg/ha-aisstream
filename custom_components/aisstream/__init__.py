@@ -2,7 +2,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_API_KEY
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, CONF_MMSI_LIST
+from .const import CONF_MMSI_LIST, CONF_TRACK_AREA, DOMAIN
 from .coordinator import AISstreamCoordinator
 
 PLATFORMS = ["device_tracker"]
@@ -12,7 +12,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = AISstreamCoordinator(
         hass,
         entry.data[CONF_API_KEY],
-        entry.data[CONF_MMSI_LIST],
+        entry.data.get(CONF_MMSI_LIST, []),
+        track_area=entry.data.get(CONF_TRACK_AREA, False),
     )
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     await coordinator.async_start()

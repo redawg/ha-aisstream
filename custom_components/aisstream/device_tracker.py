@@ -4,7 +4,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import CONF_TRACK_AREA, DOMAIN
 from .coordinator import AISstreamCoordinator
 
 
@@ -14,9 +14,20 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator: AISstreamCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(
-        AISVesselTracker(coordinator, mmsi) for mmsi in coordinator.mmsi_list
-    )
+    trackers: dict[str, AISVesselTracker] = {}
+
+    def add_tracker(mmsi: str) -> None:
+        if mmsi in trackers:
+            return
+        tracker = AISVesselTracker(coordinator, mmsi)
+        trackers[mmsi] = tracker
+        async_add_entities([tracker])
+
+    if entry.data.get(CONF_TRACK_AREA):
+        coordinator.set_vessel_discovered_callback(add_tracker)
+    else:
+        for mmsi in coordinator.mmsi_list:
+            add_tracker(mmsi)
 
 
 class AISVesselTracker(TrackerEntity):
